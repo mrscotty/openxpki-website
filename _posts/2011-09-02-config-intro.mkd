@@ -1,6 +1,7 @@
 ---
-layout: default
+layout: post
 title: Introducing the new OpenXPKI Configuration
+author: Scott T. Hardin
 description: For OpenXPKI v1.0, we have created a new configuration subsystem. OpenXPKI can be a complex system with infinite configuration possibilities. This new configuration subsystem helps tackle this task with clear, consise and reliable methods and tools.
 ---
 

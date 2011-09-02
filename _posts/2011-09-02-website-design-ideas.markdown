@@ -1,6 +1,7 @@
 ---
-layout: default
+layout: post
 title: Website Design Ideas
+author: Scott T. Hardin
 description: There are some ideas on how to redesign the OpenXPKI website that have been floating around.
 ---
 

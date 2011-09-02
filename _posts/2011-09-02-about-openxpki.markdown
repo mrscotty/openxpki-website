@@ -1,7 +1,8 @@
 ---
-layout: default
+layout: post
 title: About OpenXPKI
 category: frontpage
+author: Scott T. Hardin
 description: OpenXPKI is an enterprise-grade PKI/Trustcenter software supporting well-established infrastructure components like RDBMS and Hardware Security Modules. Flexibility and modularity are the project's key design objectives.
 ---
 
