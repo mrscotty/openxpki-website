@@ -311,7 +311,7 @@ img.top-margin {
   border-bottom: 1px solid #f1efaf;
   background-repeat: no-repeat;
   background-position: 0 10px;
-  background-image: url(/images/bootcamp_sprites.png);
+  background-image: url({{ site.url }}/images/bootcamp_sprites.png);
 }
 
 .bootcamp-help .setup .image {
