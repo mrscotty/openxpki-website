@@ -61,12 +61,15 @@ title: Welcome
   <div class="list-body">
     <ul>
       {% for post in site.posts reversed limit:5 %}
+        {% if post.categories contains "frontpage" %}
+        {% else %}
         <li>
           <a href="{{ post.url }}" id="{{ cat }}">
             <h3>{{ post.title }}</h3>
             <p>{{ post.description }}</p>
           </a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>
   </div>
