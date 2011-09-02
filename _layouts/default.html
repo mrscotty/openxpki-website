@@ -13,24 +13,24 @@ sidebar_cats:
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>OpenXPKI - {{ page.title }}</title>
-    <link href="/shared/css/documentation.css" media="screen" rel="stylesheet" type="text/css">
-    <link href="/shared/css/pygments.css" media="screen" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen">
-    <link rel="stylesheet" href="/css/print.css" type="text/css" media="print">
-    <script src="/shared/js/jquery.js" type="text/javascript"></script>
-    <script src="/shared/js/documentation.js" type="text/javascript"></script>
-    <script src="/js/help.js" type="text/javascript"></script>
+    <link href="{{ site.url }}/shared/css/documentation.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="{{ site.url }}/shared/css/pygments.css" media="screen" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ site.url }}/css/style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="{{ site.url }}/css/print.css" type="text/css" media="print">
+    <script src="{{ site.url }}/shared/js/jquery.js" type="text/javascript"></script>
+    <script src="{{ site.url }}/shared/js/documentation.js" type="text/javascript"></script>
+    <script src="{{ site.url }}/js/help.js" type="text/javascript"></script>
   </head>
 
   <body class="documentation">
     <div id="header-wrapper">
       <div id="header">
         <div>
-          <a class="logo" href="/"><img src="/images/openxpki_logo.png" width="179" height="45" /></a>
+            <a class="logo" href="{{ site.url }}/"><img src="{{ site.url }}/images/openxpki_logo.png" width="179" height="45" /></a>
           <ul class="nav">
-            <li><a href="/useful-link-1">Useful Link 1</a></li>
-            <li><a href="/useful-link-2">Useful Link 2</a></li>
-            <li><a href="/useful-link-3">Useful Link 3</a></li>
+              <li><a href="{{ site.url }}/useful-link-1">Useful Link 1</a></li>
+              <li><a href="{{ site.url }}/useful-link-2">Useful Link 2</a></li>
+              <li><a href="{{ site.url }}/useful-link-3">Useful Link 3</a></li>
           </ul>
         </div>
       </div><!-- #header -->
@@ -49,16 +49,16 @@ sidebar_cats:
             {% for cat in (page.sidebar_cats) %}
             <li class="js-topic">
               {% if cat == 'openxpki_resources' %}
-                <h3><a href="#">OpenXPKI Resources</a></h3>
+              <h3><a href="{{ site.url }}#">OpenXPKI Resources</a></h3>
               {% else %}
-                <h3><a href="#">{{ cat | replace:'_',' ' | capitalize }}</a></h3>
+              <h3><a href="{{ site.url }}#">{{ cat | replace:'_',' ' | capitalize }}</a></h3>
               {% endif %}
               <ul class="js-guides">
                 {% for post in site.posts reversed %}{% if post.categories contains cat %}
                   {% if page.title == post.title %}
                     <li class="disable"><span>{{ page.title }}</span></li>
                   {% else %}
-                    <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+                  <li><a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a></li>
                   {% endif %}
                 {% endif %}{% endfor %}
               </ul>
@@ -106,10 +106,10 @@ sidebar_cats:
 
         <ul class="footer_nav">
           <h4>OpenXPKI</h4>
-          <li><a href="https://www.openxpki.org/about">About</a></li>
-          <li><a href="https://www.openxpki.org/blog">Blog</a></li>
-          <li><a href="https://www.openxpki.org/contact">Contact &amp; Support</a></li>
-          <li><a href="https://www.openxpki.org/training">Training</a></li>
+          <li><a href="{{ site.url }}/about">About</a></li>
+          <li><a href="{{ site.url }}/blog">Blog</a></li>
+          <li><a href="{{ site.url }}/contact">Contact &amp; Support</a></li>
+          <li><a href="{{ site.url }}/training">Training</a></li>
           <!--          <li><a href="http://status.github.com/">Site Status</a></li> -->
         </ul>
 
@@ -144,12 +144,12 @@ sidebar_cats:
         <div class="footer_inner clearfix">
             <div id="legal"> 
               <!--[if IE]><a class="home_ie" href="http://github.com">Home</a><![endif]-->
-              <![if !IE]><a class="home" href="http://www.openxpki.org">Home</a><![endif]>
+              <![if !IE]><a class="home" href="{{ site.url }}">Home</a><![endif]>
               
               <ul id="legal_links">
-                <li><a href="http://www.openxpki.org/terms-of-service/">Terms of Service</a></li>
-                <li><a href="http://www.openxpki.org/privacy-policy/">Privacy</a></li>
-                <li><a href="http://www.openxpki.org/security/">Security</a></li>
+                  <li><a href="{{ site.url }}/terms-of-service/">Terms of Service</a></li>
+                  <li><a href="{{ site.url }}/privacy-policy/">Privacy</a></li>
+                  <li><a href="{{ site.url }}/security/">Security</a></li>
               </ul>
 
               <p>&copy; <span id="year">year</span> The OpenXPKI Project. All rights reserved.</p>

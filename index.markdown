@@ -10,7 +10,7 @@ title: Welcome
       {% for post in site.posts reversed %}
         {% if post.categories contains "frontpage" %}
         <li>
-          <a href="{{ post.url }}" id="{{ cat }}">
+          <a href="{{ site.url }}{{ post.url }}" id="{{ cat }}">
             <h3>{{ post.title }}</h3>
             <p>{{ post.description }}</p>
           </a>
@@ -29,7 +29,7 @@ title: Welcome
   <div class="bootcamp-body">
   <ul>
     <li class="concepts">
-      <a href="/pki-concepts">
+      <a href="{{ site.url }}/pki-concepts">
         <div class="image">&nbsp;</div>
         <div class="desc">
           <h2>PKI Concepts</h2>
@@ -37,7 +37,7 @@ title: Welcome
       </a>
     </li>
     <li class="features">
-      <a href="/openxpki-features">
+      <a href="{{ site.url }}/openxpki-features">
         <div class="image">&nbsp;</div>
         <div class="desc">
           <h2>OpenXPKI Features</h2>
@@ -45,7 +45,7 @@ title: Welcome
       </a>
     </li>
     <li class="installing-openxpki">
-      <a href="/installing-openxpki">
+      <a href="{{ site.url }}/installing-openxpki">
         <div class="image">&nbsp;</div>
         <div class="desc">
           <h2>Installing OpenXPKI</h2>
@@ -64,7 +64,7 @@ title: Welcome
         {% if post.categories contains "frontpage" %}
         {% else %}
         <li>
-          <a href="{{ post.url }}" id="{{ cat }}">
+          <a href="{{ site.url }}{{ post.url }}" id="{{ cat }}">
             <h3>{{ post.title }}</h3>
             <p>{{ post.description }}</p>
           </a>
