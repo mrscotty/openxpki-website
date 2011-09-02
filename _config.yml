@@ -2,3 +2,4 @@ permalink: /:title
 auto: false
 server: false
 pygments: true
+url: /openxpki-website/
