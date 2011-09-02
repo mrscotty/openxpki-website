@@ -23,8 +23,8 @@ discussions regarding design and functionality.
 To try it out yourself, just install [Jekyll](https://github.com/mojombo/jekyll/wiki)
 on your computer. Then, clone this repo:
 
-    git clone git://github.com/mrscotty/oxi-docs.git oxi-docs
-    cd oxi-docs
+    git clone git://github.com/mrscotty/openxpki-website.git openxpki-website
+    cd openxpki-website
 
 Then, start Jekyll with the built-in server:
 
