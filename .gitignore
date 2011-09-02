@@ -1,0 +1,9 @@
+# Jekyll temp dirs
+_site
+
+# Mac stuff
+.DS_Store
+
+# VIM stuff
+.*.swp
+*~

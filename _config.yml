@@ -1,0 +1,4 @@
+permalink: /:title
+auto: false
+server: false
+pygments: true

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>email_reply_parser.rb</title>
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>email_reply_parser.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;strscan&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>EmailReplyParser is a small library to parse plain text email content.  The
+goal is to identify which fragments are quoted, part of a signature, or
+original body content.  We want to support both top and bottom posters, so
+no simple &ldquo;REPLY ABOVE HERE&rdquo; content is used.</p>
+
+<p>Beyond RFC 5322 (which is handled by the <a href="https://github.com/mikel/mail">Ruby mail gem</a>), there aren&rsquo;t
+any real standards for how emails are created.  This attempts to parse out
+common conventions for things like replies:</p>
+
+<pre><code>this is some text
+
+On &lt;date&gt;, &lt;author&gt; wrote:
+&gt; blah blah
+&gt; blah blah
+</code></pre>
+
+<p>&hellip; and signatures:</p>
+
+<pre><code>this is some text
+
+-- 
+Bob
+http://homepage.com/~bob
+</code></pre>
+
+<p>Each of these are parsed into Fragment objects.</p>
+
+<p>EmailReplyParser also attempts to figure out which of these blocks should
+be hidden from users.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">class</span> <span class="nc">EmailReplyParser</span>
+  <span class="no">VERSION</span> <span class="o">=</span> <span class="s2">&quot;0.2.0&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>Splits an email body into a list of Fragments.</p>
+
+<p>text &ndash; A String email body.</p>
+
+<p>Returns an Email instance.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">read</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="no">Email</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Emails'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Emails">&#182;</a>
+        </div>
+        <h2>Emails</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>An Email instance represents a parsed body String.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">Email</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>Emails have an Array of Fragments.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_reader</span> <span class="ss">:fragments</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span>
+      <span class="vi">@fragments</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>Splits the given text into a list of Fragments.  This is roughly done by
+reversing the text and parsing from the bottom to the top.  This way we
+can check for &lsquo;On <date>, <author> wrote:&rsquo; lines above quoted blocks.</p>
+
+<p>text &ndash; A String email body.</p>
+
+<p>Returns this same Email instance.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>The text is reversed initially due to the way we check for hidden
+fragments.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="n">text</span><span class="o">.</span><span class="n">reverse!</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>This determines if any &lsquo;visible&rsquo; Fragment has been found.  Once any
+visible Fragment is found, stop looking for hidden ones.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="vi">@found_visible</span> <span class="o">=</span> <span class="kp">false</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>This instance variable points to the current Fragment.  If the matched
+line fits, it should be added to this Fragment.  Otherwise, finish it
+and start a new Fragment.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="vi">@fragment</span> <span class="o">=</span> <span class="kp">nil</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-11">&#182;</a>
+        </div>
+        <p>Use the StringScanner to pull out each line of the email content.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="vi">@scanner</span>  <span class="o">=</span> <span class="no">StringScanner</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+      <span class="k">while</span> <span class="n">line</span> <span class="o">=</span> <span class="vi">@scanner</span><span class="o">.</span><span class="n">scan_until</span><span class="p">(</span><span class="sr">/\n/</span><span class="p">)</span>
+        <span class="n">scan_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+      <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>Be sure to parse the last line of the email.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="p">(</span><span class="n">last_line</span> <span class="o">=</span> <span class="vi">@scanner</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">scan_line</span><span class="p">(</span><span class="n">last_line</span><span class="p">)</span>
+      <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>Finish up the final fragment.  Finishing a fragment will detect any
+attributes (hidden, signature, reply), and join each line into a
+string.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="n">finish_fragment</span>
+
+      <span class="vi">@scanner</span> <span class="o">=</span> <span class="vi">@fragment</span> <span class="o">=</span> <span class="kp">nil</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-14">&#182;</a>
+        </div>
+        <p>Now that parsing is done, reverse the order.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="vi">@fragments</span><span class="o">.</span><span class="n">reverse!</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+
+  <span class="kp">private</span>
+    <span class="no">EMPTY</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">freeze</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Line-by-Line_Parsing'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Line-by-Line_Parsing">&#182;</a>
+        </div>
+        <h2>Line-by-Line Parsing</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-16'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-16">&#182;</a>
+        </div>
+        <p>Scans the given line of text and figures out which fragment it belongs
+to.</p>
+
+<p>line &ndash; A String line of text from the email.</p>
+
+<p>Returns nothing.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">scan_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+      <span class="n">line</span><span class="o">.</span><span class="n">chomp!</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="n">line</span><span class="o">.</span><span class="n">lstrip!</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-17'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-17">&#182;</a>
+        </div>
+        <p>We&rsquo;re looking for leading <code>&gt;</code>&rsquo;s to see if this line is part of a
+quoted Fragment.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="n">line_levels</span> <span class="o">=</span> <span class="n">line</span> <span class="o">=~</span> <span class="sr">/(&gt;+)$/</span> <span class="p">?</span> <span class="vg">$1</span><span class="o">.</span><span class="n">size</span> <span class="p">:</span> <span class="mi">0</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-18'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-18">&#182;</a>
+        </div>
+        <p>Mark the current Fragment as a signature if the current line is empty
+and the Fragment starts with a common signature indicator.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="vi">@fragment</span> <span class="o">&amp;&amp;</span> <span class="n">line</span> <span class="o">==</span> <span class="no">EMPTY</span>
+        <span class="k">if</span> <span class="vi">@fragment</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">last</span> <span class="o">=~</span> <span class="sr">/[\-\_]$/</span>
+          <span class="vi">@fragment</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="kp">true</span>
+          <span class="n">finish_fragment</span>
+        <span class="k">end</span>
+      <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-19'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-19">&#182;</a>
+        </div>
+        <p>If the line matches the current fragment, add it.  Note that a common
+reply header also counts as part of the quoted Fragment, even though
+it doesn&rsquo;t start with <code>&gt;</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="vi">@fragment</span> <span class="o">&amp;&amp;</span>
+          <span class="p">((</span><span class="vi">@fragment</span><span class="o">.</span><span class="n">quoted?</span> <span class="o">!=</span> <span class="n">line_levels</span><span class="o">.</span><span class="n">zero?</span><span class="p">)</span> <span class="o">||</span>
+           <span class="p">(</span><span class="vi">@fragment</span><span class="o">.</span><span class="n">quoted?</span> <span class="o">&amp;&amp;</span> <span class="n">quote_header?</span><span class="p">(</span><span class="n">line</span><span class="p">)))</span>
+        <span class="vi">@fragment</span><span class="o">.</span><span class="n">lines</span> <span class="o">&lt;&lt;</span> <span class="n">line</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-20'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-20">&#182;</a>
+        </div>
+        <p>Otherwise, finish the fragment and start a new one.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">else</span>
+        <span class="n">finish_fragment</span>
+        <span class="vi">@fragment</span> <span class="o">=</span> <span class="no">Fragment</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">!</span><span class="n">line_levels</span><span class="o">.</span><span class="n">zero?</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-21'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-21">&#182;</a>
+        </div>
+        <p>Detects if a given line is a header above a quoted area.  It is only
+checked for lines preceding quoted regions.</p>
+
+<p>line &ndash; A String line of text from the email.</p>
+
+<p>Returns true if the line is a valid header, or false.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">quote_header?</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+      <span class="n">line</span> <span class="o">=~</span> <span class="sr">/^:etorw.*nO$/</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-22'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-22">&#182;</a>
+        </div>
+        <p>Builds the fragment string and reverses it, after all lines have been
+added.  It also checks to see if this Fragment is hidden.  The hidden
+Fragment check reads from the bottom to the top.</p>
+
+<p>Any quoted Fragments or signature Fragments are marked hidden if they
+are below any visible Fragments.  Visible Fragments are expected to
+contain original content by the author.  If they are below a quoted
+Fragment, then the Fragment should be visible to give context to the
+reply.</p>
+
+<pre><code>some original text (visible)
+
+&gt; do you have any two's? (quoted, visible)
+
+Go fish! (visible)
+
+&gt; -- 
+&gt; Player 1 (quoted, hidden)
+
+-- 
+Player 2 (signature, hidden)
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">finish_fragment</span>
+      <span class="k">if</span> <span class="vi">@fragment</span>
+        <span class="vi">@fragment</span><span class="o">.</span><span class="n">finish</span>
+        <span class="k">if</span> <span class="o">!</span><span class="vi">@found_visible</span>
+          <span class="k">if</span> <span class="vi">@fragment</span><span class="o">.</span><span class="n">quoted?</span> <span class="o">||</span> <span class="vi">@fragment</span><span class="o">.</span><span class="n">signature?</span> <span class="o">||</span>
+              <span class="vi">@fragment</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">strip</span> <span class="o">==</span> <span class="no">EMPTY</span>
+            <span class="vi">@fragment</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="kp">true</span>
+          <span class="k">else</span>
+            <span class="vi">@found_visible</span> <span class="o">=</span> <span class="kp">true</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+        <span class="vi">@fragments</span> <span class="o">&lt;&lt;</span> <span class="vi">@fragment</span>
+      <span class="k">end</span>
+      <span class="vi">@fragment</span> <span class="o">=</span> <span class="kp">nil</span>
+    <span class="k">end</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Fragments'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Fragments">&#182;</a>
+        </div>
+        <h2>Fragments</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-24'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-24">&#182;</a>
+        </div>
+        <p>Represents a group of paragraphs in the email sharing common attributes.
+Paragraphs should get their own fragment if they are a quoted area or a
+signature.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">Fragment</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:quoted</span><span class="p">,</span> <span class="ss">:signature</span><span class="p">,</span> <span class="ss">:hidden</span><span class="p">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-25'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-25">&#182;</a>
+        </div>
+        <p>This is an Array of String lines of content.  Since the content is
+reversed, this array is backwards, and contains reversed strings.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_reader</span> <span class="ss">:lines</span><span class="p">,</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-26'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-26">&#182;</a>
+        </div>
+        <p>This is reserved for the joined String that is build when this Fragment
+is finished.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="ss">:content</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">quoted</span><span class="p">,</span> <span class="n">first_line</span><span class="p">)</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="kp">false</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">quoted</span> <span class="o">=</span> <span class="n">quoted</span>
+      <span class="vi">@lines</span>      <span class="o">=</span> <span class="o">[</span><span class="n">first_line</span><span class="o">]</span>
+      <span class="vi">@content</span>    <span class="o">=</span> <span class="kp">nil</span>
+      <span class="vi">@lines</span><span class="o">.</span><span class="n">compact!</span>
+    <span class="k">end</span>
+
+    <span class="k">alias</span> <span class="n">quoted?</span>    <span class="n">quoted</span>
+    <span class="k">alias</span> <span class="n">signature?</span> <span class="n">signature</span>
+    <span class="k">alias</span> <span class="n">hidden?</span>    <span class="n">hidden</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-27'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-27">&#182;</a>
+        </div>
+        <p>Builds the string content by joining the lines and reversing them.</p>
+
+<p>Returns nothing.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">finish</span>
+      <span class="vi">@content</span> <span class="o">=</span> <span class="vi">@lines</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="vi">@lines</span> <span class="o">=</span> <span class="kp">nil</span>
+      <span class="vi">@content</span><span class="o">.</span><span class="n">reverse!</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">to_s</span>
+      <span class="vi">@content</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">inspect</span>
+      <span class="nb">to_s</span><span class="o">.</span><span class="n">inspect</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
