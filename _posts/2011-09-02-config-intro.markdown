@@ -92,7 +92,12 @@ The connection to the database for storing application content is defined in thi
 |:---------:|:----------------------------------------------|
 | server\_id | Unique numeric identifier for this server (usually ‘0’) |
 | server\_shift | Number of bits to shift to allow for additional server\_ids (usually 8) |
-| type      | Server type (e.g.: “MySQL”, “Oracle”) (mandatory, see type-specific details below for additional attributes |
+| type      | Server type (e.g.: “MySQL”, “Oracle”) (mandatory, see vendor-specific details below for additional attributes |
+| env      | Named-parameter list of environment variables (optional, see vendor-specific details below for list of suggested values |
+
+*Note: in the old XML config, there was also a "vendor" attribute, which
+was used to access additional vendor options. Since the only option that
+seemed to be used was for environment variables, this is probably deprecated.*
 
 #### MySQL ####
 
@@ -115,9 +120,30 @@ The connection to the database for storing application content is defined in thi
 | user      | Name of user for authentication (e.g.: “/”)       |
 | passwd    | Password of user for authentication               |
 
+For the *env* list, the following are suggested default values:
+
+| Attribute    | Value                                          |
+|:------------:|:-----------------------------------------------|
+| ORACLE\_HOME | /opt/oracle/OraHome                            |
+| ORACLE\_SID  | OPENXPKI01                                     |
+
+#### DB2 ####
+
+***Note:*** *This section is incomplete and should be filled in by
+someone familiar with DB2*
+
+For the *env* list, the following are suggested default values:
+
+| Attribute   | Value                                               |
+|:-----------:|:----------------------------------------------------|
+| CLASSPATH   |    /home/db2inst1/sqllib/java/sqlj.zip:/home/db2inst1/sqllib/function:/home/db2inst1/sqllib/java/db2java.zip:/home/db2inst1/sqllib/java/runtime.zip |
+| DB2INSTANCE |  db2inst1                                           |
+| DB2DIR      |       /usr/IBMdb2/V7.1                              |
+| INSTHOME    |     /home/db2inst1                                  |
+
 ### l18n.yaml ###
 
-The section “l18n” defines the parameters regarding localization.
+The section *l18n* defines the parameters regarding localization.
 
 | Component | Location                                          |
 |:---------:|:--------------------------------------------------|
@@ -126,7 +152,7 @@ The section “l18n” defines the parameters regarding localization.
 
 ### server.yaml ###
 
-The section “server” contains parameters regarding the server process, itself. 
+The section *server* contains parameters regarding the server process, itself. 
 
 | Component | Location                                          |
 |:---------:|:--------------------------------------------------|
