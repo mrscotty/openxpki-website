@@ -12,7 +12,8 @@ running. In addition to the OpenXPKI-specific packages, additional packages
 required from CPAN are also supplied to fill the missing link between the
 Debian distributions and the Perl modules required by OpenXPKI.
 
-The currently-supported Debian release is "lucid".
+*Note:* the current packages were build on Ubuntu "lucid", but have also
+been tested on Debian "squeeze".
 
 > *Note:* During initial testing, the Debian packages are on build0.cynops.de,
 > which is a development host and has no SLAs. After testing, the packages
@@ -35,21 +36,21 @@ For testing, it is handy to use a virtual guest to simplify installation and con
 
 *Note: The following steps require root access*
 
-1. Add the OpenXPKI Debian repository to your APT configuration:
-
-        wget -O /etc/apt/sources.list.d/openxpki.list \
-            http://build0.cynops.de/openxpki-squeeze.list
-        aptitude update
-
-2. Confirm your APT configuration (the following command should return multiple OpenXPKI packages):
-
-        aptitude search openxpki
-
-3. Create the OpenXPKI group and user
+1. Create the OpenXPKI group and user
 
         addgroup openxpki
         adduser --disabled-password --gecos 'OpenXPKI Admin' \
             --ingroup openxpki openxpki
+
+2. Add the OpenXPKI Debian repository to your APT configuration:
+
+        wget -O /etc/apt/sources.list.d/openxpki.list \
+            http://build0.cynops.de/dpkg/openxpki-deb-lucid.list
+        aptitude update
+
+3. Confirm your APT configuration (the following command should return multiple OpenXPKI packages):
+
+        aptitude search openxpki
 
 4. Install the OpenXPKI packages (Note: this will automatically install other prerequisites)
 
