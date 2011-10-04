@@ -32,3 +32,6 @@ the "Welcome to OpenXPKI" list box.
 
 These categories show up in the sidebar as navigation items. The list is defined
 in \_layouts/default.html.
+
+You put your article in one or more of these categories by using the 'category:'
+keyword in the YAML header of your markdown document.
