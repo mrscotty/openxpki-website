@@ -1,8 +1,9 @@
 ---
 layout: post
-title: Introducing the new OpenXPKI Configuration
+title: OpenXPKI Configuration - Introduction
 author: Scott T. Hardin
-description: For OpenXPKI v1.0, we have created a new configuration subsystem. OpenXPKI can be a complex system with infinite configuration possibilities. This new configuration subsystem helps tackle this task with clear, consise and reliable methods and tools.
+category: admin
+description: For OpenXPKI v1.0, we have created a new configuration subsystem.  OpenXPKI can be a complex system with infinite configuration possibilities.  This new configuration subsystem helps tackle this task with clear, consise and reliable methods and tools.
 ---
 
 # Introduction #
@@ -14,6 +15,10 @@ OpenXPKI can be installed using a default configuration for test purposes, but t
 The section “The Basics” describes what the parameters are and how they are named. It also explains the configuration directory and file layout.
 
 This document applies to OpenXPKI Version 1.0.
+
+> *Note: Starting with commit 83a39b33 from 8/23/2011, the new configuration
+> subsystem is available, but the initial deployment is still done via the
+> old XML configuration files.*
 
 # The Basics #
 
@@ -78,97 +83,12 @@ In addition to the core OpenXPKI configuration, there are other locations for co
 
 As mentioned in the chapter “The Basics”, the configuration is divided into subdirectories and files, who’s names make up the first two levels of the parameter key names. This chapter describes the contents and layout of these directories.
 
-## Core/ ##
+# Tips and Tricks #
 
-The core directory contains files for components central to the basic core functionality of the OpenXPKI service. It includes the connection to the database as well as administrative details regarding the system process, itself.
+## Viewing Configuration Values ##
 
-### database.yaml ###
-
-The connection to the database for storing application content is defined in this section. Each supported database has its own requirements on the parameters needed to locate and access the database instance. The table “Generic Attributes” describes those attributes common to all vendors.
-
-#### Generic Attributes ####
-
-| Component | Location                                      |
-|:---------:|:----------------------------------------------|
-| server\_id | Unique numeric identifier for this server (usually ‘0’) |
-| server\_shift | Number of bits to shift to allow for additional server\_ids (usually 8) |
-| type      | Server type (e.g.: “MySQL”, “Oracle”) (mandatory, see vendor-specific details below for additional attributes |
-| env      | Named-parameter list of environment variables (optional, see vendor-specific details below for list of suggested values |
-
-*Note: in the old XML config, there was also a "vendor" attribute, which
-was used to access additional vendor options. Since the only option that
-seemed to be used was for environment variables, this is probably deprecated.*
-
-#### MySQL ####
-
-| Attribute | Value                                             |
-|:---------:|:--------------------------------------------------|
-| name      | Name of database                                  |
-| host      | Host name or IP address for destination server    |
-| port      | Port number for listener                          |
-| user      | Name of user for authentication                   |
-| passwd    | Password of user for authentication               |
-
-*TODO: is the environment/vendor/type/ mysql ... needed?*
-
-#### Oracle ####
-
-| Component | Location                                          |
-|:---------:|:--------------------------------------------------|
-| name      | Name of database (TODO: is this needed?)          |
-| namespace | Namespace in database (e.g.: “L2OPENXPKI”)        |
-| user      | Name of user for authentication (e.g.: “/”)       |
-| passwd    | Password of user for authentication               |
-
-For the *env* list, the following are suggested default values:
-
-| Attribute    | Value                                          |
-|:------------:|:-----------------------------------------------|
-| ORACLE\_HOME | /opt/oracle/OraHome                            |
-| ORACLE\_SID  | OPENXPKI01                                     |
-
-#### DB2 ####
-
-***Note:*** *This section is incomplete and should be filled in by
-someone familiar with DB2*
-
-For the *env* list, the following are suggested default values:
-
-| Attribute   | Value                                               |
-|:-----------:|:----------------------------------------------------|
-| CLASSPATH   |    /home/db2inst1/sqllib/java/sqlj.zip:/home/db2inst1/sqllib/function:/home/db2inst1/sqllib/java/db2java.zip:/home/db2inst1/sqllib/java/runtime.zip |
-| DB2INSTANCE |  db2inst1                                           |
-| DB2DIR      |       /usr/IBMdb2/V7.1                              |
-| INSTHOME    |     /home/db2inst1                                  |
-
-### l18n.yaml ###
-
-The section *l18n* defines the parameters regarding localization.
-
-| Component | Location                                          |
-|:---------:|:--------------------------------------------------|
-| locale\_directory | Path to locale files                      |
-| default\_language | Default L18N language (e.g.: “C”)         |
-
-### server.yaml ###
-
-The section *server* contains parameters regarding the server process, itself. 
-
-| Component | Location                                          |
-|:---------:|:--------------------------------------------------|
-| user      | User to run OpenXPKI daemon                       |
-| group     | Group to run OpenXPKI daemon                      |
-| socket\_file | Name of socket file (e.g.: /var/openxpki.socket) |
-| socket\_owner | Owner of socket file                          |
-| pid\_file | Name of file containing OpenXPKI daemon PID       |
-| session\_dir | Name of directory for temporary session files  |
-| connection\_timeout | Timeout for incoming network connections |
-| session\_lifetime | Maximum lifetime for session files        |
-| stderr    | File for logging STDERR                           |
-| tmpdir    | Directory for temporary files                     |
-| transport | (e.g.: Simple)                                    |
-| service   | (e.g.: Default, SCEP) *TODO: this should be an array* |
-
+To view the configuration parameter values stored internally by OpenXPKI, 
+the command "cfgver" from the Config::Versioned module is used.
 
 # Accessing Parameter Values #
 
@@ -199,12 +119,14 @@ The import supports the following named-parameters:
 
 With the parameters, the “use” statement looks something like this:
 
+{% highlight perl %}
     use OpenXPKI::Config(
         {
      		filename => '00_instantiate.conf',
       		path => [ qw( 12_config ) ],
         }
     );
+{% endhighlight %}
 
 Later in the code, to fetch the current configuration:
 
