@@ -44,7 +44,7 @@ sidebar_cats:
         {% if page.author %}
         {{ page.author }}, 
         {% endif %}
-        {{ page.date }}
+        {{ page.date | date_to_long_string }}
         </em>
         {{ content }}
       </div>

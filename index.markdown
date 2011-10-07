@@ -60,13 +60,17 @@ title: Welcome
   <h2>Recent Articles</h2>
   <div class="list-body">
     <ul>
-      {% for post in site.posts reversed limit:5 %}
+      {% for post in site.posts limit:5 %}
         {% if post.categories contains "frontpage" %}
         {% else %}
         <li>
           <a href="{{ site.url }}{{ post.url }}" id="{{ cat }}">
             <h3>{{ post.title }}</h3>
-            <p>{{ post.description }}</p>
+            <p>
+                {{ post.description }}
+                &nbsp;
+                <em>... [{{ post.date | date_to_string }}]</em>
+            </p>
           </a>
         </li>
         {% endif %}
