@@ -2,6 +2,7 @@
 layout: post
 title: InsertYourTitleHere
 author: InsertYourNameHere
+#category: admin, developer, advanced, troubleshooting, resources
 description: InsertYourBriefDescriptionHere
 ---
 
