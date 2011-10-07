@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Debian Package Installation
+title: Installing OpenXPKI - Debian
 author: Scott T. Hardin
 category: admin
 description: For Debian users new to OpenXPKI, using the installation instructions here is a relatively straight-forward method of getting a basic installation up and running. 
