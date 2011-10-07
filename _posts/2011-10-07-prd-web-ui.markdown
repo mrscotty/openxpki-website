@@ -1,0 +1,27 @@
+---
+layout: post
+title: Product Requirement Document - Web UI
+author: Scott T. Hardin
+category: developer
+description: This PRD covers the Web User Interface
+---
+
+# Overview #
+
+The web UI is the "store front" of our system and needs to allow the
+users to quickly get the information they need and reliably walk them
+through the necessary tasks.
+
+The requirements in this document apply to a new, yet to be designed
+front end.
+
+# Requirement Items #
+
+UI0001
+: A user must quickly find the details regarding associated realms and
+certificates.
+
+UI0002
+: A user must easily find important navigation items like login/logout, 
+switching realm and role.
+
